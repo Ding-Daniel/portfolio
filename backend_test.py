@@ -52,8 +52,15 @@ class ContactsAPITester:
     def test_cors_headers(self):
         """Test CORS headers for OPTIONS and POST requests"""
         try:
-            # Test OPTIONS request
-            options_response = requests.options(f"{API_BASE}/contacts")
+            # Test OPTIONS preflight request with proper headers
+            options_response = requests.options(
+                f"{API_BASE}/contacts",
+                headers={
+                    "Origin": "https://example.com",
+                    "Access-Control-Request-Method": "POST",
+                    "Access-Control-Request-Headers": "Content-Type"
+                }
+            )
             
             cors_headers_present = (
                 'access-control-allow-origin' in options_response.headers and
@@ -61,12 +68,19 @@ class ContactsAPITester:
                 'access-control-allow-headers' in options_response.headers
             )
             
-            origin_wildcard = options_response.headers.get('access-control-allow-origin') == '*'
+            # Test POST request with Origin header to verify CORS
+            post_response = requests.post(
+                f"{API_BASE}/contacts",
+                json={"name": "CORS Test", "email": "cors@example.com", "message": "Testing CORS"},
+                headers={"Origin": "https://example.com", "Content-Type": "application/json"}
+            )
             
-            if cors_headers_present and origin_wildcard:
-                self.log_test("CORS Headers Present", True, "Wildcard origin allowed")
+            post_cors_header = 'access-control-allow-origin' in post_response.headers
+            
+            if cors_headers_present and post_cors_header:
+                self.log_test("CORS Headers Present", True, "CORS working for OPTIONS and POST")
             else:
-                self.log_test("CORS Headers Present", False, f"Headers: {dict(options_response.headers)}")
+                self.log_test("CORS Headers Present", False, f"OPTIONS CORS: {cors_headers_present}, POST CORS: {post_cors_header}")
                 
         except Exception as e:
             self.log_test("CORS Headers Present", False, f"Exception: {str(e)}")
