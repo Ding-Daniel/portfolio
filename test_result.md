@@ -101,3 +101,68 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Build a modern portfolio for Daniel Ding with black/white/red, dramatic animations, rounded glass navbar, buttery smooth scrolling; then add backend to save contact submissions to Mongo."
+backend:
+  - task: "Create Contacts API (POST/GET)"
+    implemented: true
+    working: NA
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Implemented /api/contacts POST+GET with validation, Mongo storage, CORS open."
+  - task: "Hello root and status endpoints"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Existing endpoints retained."
+frontend:
+  - task: "Integrate Contact form with backend"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/components/Sections.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Replaced localStorage with axios POST to /api/contacts and error toast handling."
+  - task: "Frontend mock with Lenis, typewriter-on-view, sections"
+    implemented: true
+    working: true
+    file: "/app/frontend/src"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "User confirmed UI/scrolling is good."
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Contacts API functional testing"
+    - "Frontend Contact form integration"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Please run backend tests for /api/contacts POST and GET (validation, CORS). Then, if pass, do a basic UI flow to submit contact once."
