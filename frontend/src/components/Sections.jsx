@@ -413,7 +413,7 @@ function Contact() {
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-black text-white border-top border-white/10">
+    <footer className="bg-black text-white border-t border-white/10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="text-white/60 text-sm">© {year} Daniel Ding</div>
         <div className="flex items-center gap-4">
