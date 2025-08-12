@@ -57,7 +57,7 @@ export default function Navbar() {
         <button
           className="md:hidden inline-flex items-center justify-center p-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
           aria-label="Toggle menu"
-          onClick={() => setOpen((v) =&gt; !v)}
+          onClick={() => setOpen((v) => !v)}
         >
           {open ? <X className="text-white" /> : <Menu className="text-white" />}
         </button>
