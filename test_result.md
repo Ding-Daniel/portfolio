@@ -106,15 +106,18 @@ user_problem_statement: "Build a modern portfolio for Daniel Ding with black/whi
 backend:
   - task: "Create Contacts API (POST/GET)"
     implemented: true
-    working: NA
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: NA
         agent: "main"
         comment: "Implemented /api/contacts POST+GET with validation, Mongo storage, CORS open."
+      - working: true
+        agent: "testing"
+        comment: "✅ ALL BACKEND TESTS PASSED (15/15): POST /api/contacts returns 201 with id+created_at, validation works for missing fields/invalid email/oversized message (>4000 chars) returning 422, GET /api/contacts returns sorted list by created_at desc, GET /api/ returns Hello World, CORS headers present for wildcard origins. Created backend_test.py for comprehensive API testing."
   - task: "Hello root and status endpoints"
     implemented: true
     working: true
