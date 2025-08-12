@@ -10,6 +10,8 @@ import { Github, Linkedin, Mail, ArrowUpRight, ExternalLink } from "lucide-react
 import { hero, projects, skills, socials, ACCENT, blogs } from "../mock";
 import { useToast } from "../hooks/use-toast";
 import Typewriter from "./Typewriter";
+import axios from "axios";
+import { API } from "../lib/api";
 
 function useReveal() {
   useEffect(() => {
@@ -101,28 +103,28 @@ function Hero() {
           }}
         />
         <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(transparent 60%, rgba(255,255,255,0.04))" }} />
-        {/* Smooth transition to About background */}
         <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-32">
         <div data-reveal className="reveal-up max-w-2xl">
           <p className="text-sm font-medium tracking-widest uppercase text-white/70">Portfolio</p>
-          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold leading-[1.05]">{hero.name}</h1>
-          <p className="mt-4 text-xl text-white/80">{hero.tagline}</p>
-          <p className="mt-2 text-white/60 max-w-xl">{hero.subtext}</p>
+          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold leading-[1.05]">Daniel Ding</h1>
+          <p className="mt-4 text-xl text-white/80">High school student crafting bold, interactive web experiences.</p>
+          <p className="mt-2 text-white/60 max-w-xl">I love turning ideas into dramatic, high-performance interfaces with delightful motion.</p>
           <div className="mt-8 flex gap-3">
-            {hero.ctas.map((c) => (
-              <a key={c.label} href={c.href}>
-                <Button
-                  className={`h-11 px-6 ${c.type === "ghost" ? "bg-transparent border border-white/20 text-white" : "text-black"}`}
-                  style={c.type === "ghost" ? {} : { backgroundColor: ACCENT }}
-                >
-                  {c.label}
-                  <ArrowUpRight className="ml-2 h-4 w-4" />
-                </Button>
-              </a>
-            ))}
+            <a href="#projects">
+              <Button className="h-11 px-6 text-black" style={{ backgroundColor: ACCENT }}>
+                View Projects
+                <ArrowUpRight className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
+            <a href="#contact">
+              <Button className="h-11 px-6 bg-transparent border border-white/20 text-white">
+                Contact Me
+                <ArrowUpRight className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
           </div>
         </div>
       </div>
@@ -150,15 +152,8 @@ function About() {
               <Typewriter triggerOnView text="I’m Daniel, a high school student fascinated by interactive design and motion. I enjoy building sites with strong personalities: bold type, dramatic reveals, and glassy layers—while keeping performance and accessibility in check." />
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              {[
-                "Motion-first mindset",
-                "Clean, readable code",
-                "Accessibility-aware",
-                "High performance",
-              ].map((chip) => (
-                <Badge key={chip} className="bg-white/10 text-white border border-white/10">
-                  {chip}
-                </Badge>
+              {["Motion-first mindset", "Clean, readable code", "Accessibility-aware", "High performance"].map((chip) => (
+                <Badge key={chip} className="bg-white/10 text-white border border-white/10">{chip}</Badge>
               ))}
             </div>
           </div>
@@ -185,9 +180,7 @@ function Stat({ label, value, detail, custom }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-white/60 text-sm">{label}</span>
-      <span className="font-semibold" style={{ color: ACCENT }}>
-        {custom || value}
-      </span>
+      <span className="font-semibold" style={{ color: ACCENT }}>{custom || value}</span>
     </div>
   );
 }
@@ -202,37 +195,23 @@ function Projects() {
         </div>
         <SectionLine />
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />)
-          )}
+          {projects.map((p, i) => (<ProjectCard key={p.id} project={p} index={i} />))}
         </div>
       </div>
     </section>
   );
 }
 
-function ProjectCard({ project, index }) {
+function ProjectCard({ project }) {
   const tiltRef = useTilt();
   return (
     <div data-reveal className="reveal-up">
-      <Card
-        ref={tiltRef}
-        className="bg-white/5 border-white/10 group will-change-transform transition-transform duration-300 card-accent"
-        style={{ transformStyle: "preserve-3d" }}
-      >
+      <Card ref={tiltRef} className="bg-white/5 border-white/10 group will-change-transform transition-transform duration-300 card-accent" style={{ transformStyle: "preserve-3d" }}>
         <div className="relative overflow-hidden rounded-t-md">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="h-48 w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-          />
+          <img src={project.image} alt={project.title} className="h-48 w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <div className="absolute top-3 left-3 flex gap-2">
-            {project.tags.map((t) => (
-              <Badge key={t} className="bg-black/70 text-white border border-white/10">
-                {t}
-              </Badge>
-            ))}
+            {project.tags.map((t) => (<Badge key={t} className="bg-black/70 text-white border border-white/10">{t}</Badge>))}
           </div>
         </div>
         <CardHeader>
@@ -242,9 +221,7 @@ function ProjectCard({ project, index }) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost" className="text-white/80 hover:text-white">
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
+                    <Button size="icon" variant="ghost" className="text-white/80 hover:text-white"><ExternalLink className="h-4 w-4" /></Button>
                   </TooltipTrigger>
                   <TooltipContent>Open</TooltipContent>
                 </Tooltip>
@@ -253,9 +230,7 @@ function ProjectCard({ project, index }) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-white/70 text-sm leading-relaxed">
-            <Typewriter triggerOnView text={project.description} duration={900} />
-          </p>
+          <p className="text-white/70 text-sm leading-relaxed"><Typewriter triggerOnView text={project.description} duration={900} /></p>
         </CardContent>
       </Card>
     </div>
@@ -313,13 +288,9 @@ function Blogs() {
                 <CardTitle style={{ color: ACCENT }}>{b.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  <Typewriter triggerOnView text={b.excerpt} duration={900} />
-                </p>
+                <p className="text-white/70 text-sm leading-relaxed"><Typewriter triggerOnView text={b.excerpt} duration={900} /></p>
                 <div className="mt-3 flex items-center gap-2 flex-wrap">
-                  {b.tags.map((t) => (
-                    <Badge key={t} className="bg-black/70 text-white border border-white/10">{t}</Badge>
-                  ))}
+                  {b.tags.map((t) => (<Badge key={t} className="bg-black/70 text-white border border-white/10">{t}</Badge>))}
                 </div>
               </CardContent>
             </Card>
@@ -334,16 +305,15 @@ function Contact() {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const existing = JSON.parse(localStorage.getItem("contact_submissions") || "[]");
-      existing.push({ ...form, ts: Date.now() });
-      localStorage.setItem("contact_submissions", JSON.stringify(existing));
-      toast({ title: "Message saved locally (mock)", description: "I will wire this to the backend later." });
+      const res = await axios.post(`${API}/contacts`, form, { headers: { 'Content-Type': 'application/json' } });
+      toast({ title: "Message sent", description: `Thank you ${res.data.name}!` });
       setForm({ name: "", email: "", message: "" });
     } catch (err) {
-      toast({ title: "Could not save locally", description: String(err) });
+      const msg = err?.response?.data?.detail || err.message || 'Something went wrong';
+      toast({ title: "Failed to send", description: msg });
     }
   };
 
@@ -359,33 +329,12 @@ function Contact() {
             </CardHeader>
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-4">
-                <Input
-                  placeholder="Your name"
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="bg-black/40 border-white/15 text-white placeholder:text-white/40"
-                />
-                <Input
-                  placeholder="Email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="bg-black/40 border-white/15 text-white placeholder:text-white/40"
-                />
-                <Textarea
-                  placeholder="Tell me about your idea..."
-                  required
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="bg-black/40 border-white/15 text-white placeholder:text-white/40 min-h-[140px]"
-                />
+                <Input placeholder="Your name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-black/40 border-white/15 text-white placeholder:text-white/40" />
+                <Input placeholder="Email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="bg-black/40 border-white/15 text-white placeholder:text-white/40" />
+                <Textarea placeholder="Tell me about your idea..." required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="bg-black/40 border-white/15 text-white placeholder:text-white/40 min-h-[140px]" />
                 <div className="flex items-center justify-between">
-                  <div className="text-xs text-white/60">No backend yet — saved to your browser.</div>
-                  <Button type="submit" className="text-black" style={{ backgroundColor: ACCENT }}>
-                    Send
-                  </Button>
+                  <div className="text-xs text-white/60">Data will be saved securely in the backend.</div>
+                  <Button type="submit" className="text-black" style={{ backgroundColor: ACCENT }}>Send</Button>
                 </div>
               </form>
             </CardContent>
