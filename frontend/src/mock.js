@@ -61,6 +61,15 @@ export const projects = [
     tags: ["Layout", "Design Systems", "Tailwind"],
     link: "#",
   },
+  {
+    id: "p6",
+    title: "Monochrome Flow Fields",
+    description:
+      "Generative flow-field studies and interaction probes for future visuals.",
+    image: "https://images.unsplash.com/photo-1632059368252-be6d65abc4e2",
+    tags: ["Generative", "Experiment", "UX"],
+    link: "#",
+  },
 ];
 
 export const blogs = [
@@ -127,5 +136,5 @@ export const skills = [
 export const socials = [
   { label: "GitHub", href: "#", icon: "github" },
   { label: "LinkedIn", href: "#", icon: "linkedin" },
-  { label: "Email", href: "#contact", icon: "mail" },
+  { label: "Email", href: "mailto:danielding.work@gmail.com", icon: "mail" },
 ];

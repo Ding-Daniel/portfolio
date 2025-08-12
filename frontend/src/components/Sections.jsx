@@ -51,21 +51,21 @@ function useTilt() {
   return ref;
 }
 
-function useParallax(speed = 0.15) {
+function SectionLine() {
   const ref = useRef(null);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let raf;
-    const loop = () => {
-      const y = window.scrollY || window.pageYOffset;
-      el.style.transform = `translate3d(0, ${y * speed}px, 0)`;
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [speed]);
-  return ref;
+    const el = ref.current; if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) el.classList.add("in-view"); });
+    }, { threshold: 0.2 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div className="overflow-hidden mt-4" aria-hidden>
+      <div ref={ref} className="section-line" />
+    </div>
+  );
 }
 
 export default function Sections() {
@@ -84,39 +84,33 @@ export default function Sections() {
 }
 
 function Hero() {
-  const glow1 = useParallax(0.06);
-  const glow2 = useParallax(0.1);
   return (
-    <section id="home" className="relative min-h-[88vh] flex items-center bg-black text-white overflow-hidden" data-bob>
+    <section id="home" className="relative min-h-[88vh] flex items-center bg-black text-white overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div ref={glow1}
+        <div
           className="hero-glow"
           style={{
             background:
               "radial-gradient(1200px 600px at 20% 20%, rgba(255,43,43,0.22), transparent 60%)",
           }}
         />
-        <div ref={glow2} className="hero-glow"
+        <div className="hero-glow"
           style={{
             background:
               "radial-gradient(900px 400px at 80% 30%, rgba(255,43,43,0.16), transparent 60%)",
           }}
         />
         <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(transparent 60%, rgba(255,255,255,0.04))" }} />
+        {/* Smooth transition to About background */}
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-28">
-        <div data-reveal className="reveal-up max-w-2xl" data-bob>
-          <p className="text-sm font-medium tracking-widest uppercase text-white/70">
-            <Typewriter text="Portfolio" duration={900} />
-          </p>
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-32">
+        <div data-reveal className="reveal-up max-w-2xl">
+          <p className="text-sm font-medium tracking-widest uppercase text-white/70">Portfolio</p>
           <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold leading-[1.05]">{hero.name}</h1>
-          <p className="mt-4 text-xl text-white/80">
-            <Typewriter text={hero.tagline} />
-          </p>
-          <p className="mt-2 text-white/60 max-w-xl">
-            <Typewriter text={hero.subtext} />
-          </p>
+          <p className="mt-4 text-xl text-white/80">{hero.tagline}</p>
+          <p className="mt-2 text-white/60 max-w-xl">{hero.subtext}</p>
           <div className="mt-8 flex gap-3">
             {hero.ctas.map((c) => (
               <a key={c.label} href={c.href}>
@@ -144,13 +138,16 @@ function Hero() {
 
 function About() {
   return (
-    <section id="about" className="bg-black text-white" data-bob>
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid md:grid-cols-3 gap-10 items-start">
-          <div data-reveal className="reveal-up md:col-span-2" data-bob>
-            <h2 className="text-3xl font-bold">About</h2>
-            <p className="mt-4 text-white/80 leading-relaxed">
-              <Typewriter text="I’m Daniel, a high school student fascinated by interactive design and motion. I enjoy building sites with strong personalities: bold type, dramatic reveals, and glassy layers—while keeping performance and accessibility in check." />
+    <section id="about" className="bg-[#0a0a0a] text-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
+        <div className="flex items-end justify-between gap-6" data-reveal>
+          <h2 className="text-3xl font-bold">About</h2>
+        </div>
+        <SectionLine />
+        <div className="mt-12 grid md:grid-cols-3 gap-12 items-start">
+          <div data-reveal className="reveal-up md:col-span-2">
+            <p className="text-white/80 leading-relaxed">
+              <Typewriter triggerOnView text="I’m Daniel, a high school student fascinated by interactive design and motion. I enjoy building sites with strong personalities: bold type, dramatic reveals, and glassy layers—while keeping performance and accessibility in check." />
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               {[
@@ -167,9 +164,9 @@ function About() {
           </div>
 
           <div data-reveal className="reveal-up md:col-span-1">
-            <Card className="bg-white/5 border-white/10 card-accent" data-bob>
+            <Card className="bg-white/5 border-white/10 card-accent">
               <CardHeader>
-                <CardTitle>At a glance</CardTitle>
+                <CardTitle style={{ color: ACCENT }}>At a glance</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Stat label="Based in" value="" detail="" custom="Earth" />
@@ -197,14 +194,14 @@ function Stat({ label, value, detail, custom }) {
 
 function Projects() {
   return (
-    <section id="projects" className="bg-black text-white" data-bob>
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
+    <section id="projects" className="bg-black text-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
         <div className="flex items-end justify-between gap-6">
           <h2 className="text-3xl font-bold">Projects</h2>
           <a href="#contact" className="text-sm text-white/70 hover:text-white">Let’s collaborate</a>
         </div>
-
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        <SectionLine />
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((p, i) => (
             <ProjectCard key={p.id} project={p} index={i} />)
           )}
@@ -217,7 +214,7 @@ function Projects() {
 function ProjectCard({ project, index }) {
   const tiltRef = useTilt();
   return (
-    <div data-reveal className="reveal-up" data-bob>
+    <div data-reveal className="reveal-up">
       <Card
         ref={tiltRef}
         className="bg-white/5 border-white/10 group will-change-transform transition-transform duration-300 card-accent"
@@ -240,7 +237,7 @@ function ProjectCard({ project, index }) {
         </div>
         <CardHeader>
           <div className="flex items-start justify-between gap-3">
-            <CardTitle className="text-lg">{project.title}</CardTitle>
+            <CardTitle className="text-lg" style={{ color: ACCENT }}>{project.title}</CardTitle>
             <a href={project.link} aria-label="Open project">
               <TooltipProvider>
                 <Tooltip>
@@ -257,7 +254,7 @@ function ProjectCard({ project, index }) {
         </CardHeader>
         <CardContent>
           <p className="text-white/70 text-sm leading-relaxed">
-            <Typewriter text={project.description} duration={900} />
+            <Typewriter triggerOnView text={project.description} duration={900} />
           </p>
         </CardContent>
       </Card>
@@ -267,14 +264,15 @@ function ProjectCard({ project, index }) {
 
 function Skills() {
   return (
-    <section id="skills" className="bg-black text-white" data-bob>
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
+    <section id="skills" className="bg-black text-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
         <h2 className="text-3xl font-bold" data-reveal>Skills</h2>
-        <div className="mt-10 grid md:grid-cols-3 gap-7">
+        <SectionLine />
+        <div className="mt-12 grid md:grid-cols-3 gap-8">
           {skills.map((bucket) => (
-            <Card key={bucket.group} className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal data-bob>
+            <Card key={bucket.group} className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal>
               <CardHeader>
-                <CardTitle>{bucket.group}</CardTitle>
+                <CardTitle style={{ color: ACCENT }}>{bucket.group}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-5">
                 {bucket.items.map((s) => (
@@ -297,25 +295,26 @@ function Skills() {
 
 function Blogs() {
   return (
-    <section id="blogs" className="bg-black text-white" data-bob>
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
+    <section id="blogs" className="bg-black text-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
         <div className="flex items-end justify-between gap-6">
           <h2 className="text-3xl font-bold">Blog &amp; Research</h2>
           <a href="#" className="text-sm text-white/70 hover:text-white">All posts</a>
         </div>
-        <div className="mt-10 grid md:grid-cols-3 gap-7">
+        <SectionLine />
+        <div className="mt-12 grid md:grid-cols-3 gap-8">
           {blogs.map((b) => (
-            <Card key={b.id} className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal data-bob>
+            <Card key={b.id} className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal>
               <div className="relative overflow-hidden rounded-t-md">
                 <img src={b.image} alt={b.title} className="h-40 w-full object-cover opacity-90" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               </div>
               <CardHeader>
-                <CardTitle>{b.title}</CardTitle>
+                <CardTitle style={{ color: ACCENT }}>{b.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-white/70 text-sm leading-relaxed">
-                  <Typewriter text={b.excerpt} duration={900} />
+                  <Typewriter triggerOnView text={b.excerpt} duration={900} />
                 </p>
                 <div className="mt-3 flex items-center gap-2 flex-wrap">
                   {b.tags.map((t) => (
@@ -349,13 +348,14 @@ function Contact() {
   };
 
   return (
-    <section id="contact" className="bg-black text-white" data-bob>
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
+    <section id="contact" className="bg-black text-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
         <h2 className="text-3xl font-bold" data-reveal>Contact</h2>
-        <div className="mt-8 grid md:grid-cols-2 gap-10">
-          <Card className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal data-bob>
+        <SectionLine />
+        <div className="mt-12">
+          <Card className="bg-white/5 border-white/10 reveal-up card-accent max-w-4xl mx-auto" data-reveal>
             <CardHeader>
-              <CardTitle>Let’s build something bold</CardTitle>
+              <CardTitle style={{ color: ACCENT }}>Let’s build something bold</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-4">
@@ -391,18 +391,10 @@ function Contact() {
             </CardContent>
           </Card>
 
-          <div className="reveal-up" data-reveal data-bob>
-            <div className="grid gap-4">
-              <a href="#" className="inline-flex items-center gap-2 text-white/80 hover:text-white">
-                <Github className="h-5 w-5" /> GitHub
-              </a>
-              <a href="#" className="inline-flex items-center gap-2 text-white/80 hover:text-white">
-                <Linkedin className="h-5 w-5" /> LinkedIn
-              </a>
-              <a href="#contact" className="inline-flex items-center gap-2 text-white/80 hover:text-white">
-                <Mail className="h-5 w-5" /> Email
-              </a>
-            </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-white/80">
+            <a href="#" className="inline-flex items-center gap-2 hover:text-white"><Github className="h-5 w-5" /> GitHub</a>
+            <a href="#" className="inline-flex items-center gap-2 hover:text-white"><Linkedin className="h-5 w-5" /> LinkedIn</a>
+            <a href="mailto:danielding.work@gmail.com" className="inline-flex items-center gap-2 hover:text-white"><Mail className="h-5 w-5" /> danielding.work@gmail.com</a>
           </div>
         </div>
       </div>
@@ -414,7 +406,7 @@ function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="bg-black text-white border-t border-white/10">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="text-white/60 text-sm">© {year} Daniel Ding</div>
         <div className="flex items-center gap-4">
           <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: ACCENT }} />
