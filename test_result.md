@@ -160,7 +160,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Contacts API functional testing"
     - "Frontend Contact form integration"
   stuck_tasks: []
   test_all: false
