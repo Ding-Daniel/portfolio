@@ -1,34 +1,35 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;family=Space+Grotesk:wght@400;600;700&amp;display=swap');
+
+:root { --brand: #ff2b2b; }
+
+html { scroll-behavior: smooth; }
+
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, 'Helvetica Neue', Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+
+/* Remove old CRA demo styles */
+.App { min-height: 100vh; background: #000; color: #fff; }
+
+/* Glass nav utility */
+.glass-nav {
+  background: rgba(15, 15, 16, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
+/* Hero glow decoration */
+.hero-glow { position: absolute; inset: 0; filter: blur(60px); opacity: 0.9; }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
+/* Reveal animations (dramatic but smooth) */
+.reveal-up { opacity: 0; transform: translateY(26px) scale(0.98); transition: opacity 700ms ease, transform 800ms cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
+.reveal-up.in-view { opacity: 1; transform: translateY(0) scale(1); }
 
-.App-link {
-    color: #61dafb;
-}
+/* Buttons micro-interaction (no transition: all) */
+button, .btn { transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, transform 120ms ease; }
+button:hover, .btn:hover { transform: translateY(-1px); }
+button:active, .btn:active { transform: translateY(0px); }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
+/* Card hover depth */
+.card-hover { box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+
+/* Focus ring adjustment */
+:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(255,255,255,0.18); border-radius: 6px; }
