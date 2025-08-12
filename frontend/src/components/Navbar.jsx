@@ -7,6 +7,7 @@ const links = [
   { href: "#about", label: "About" },
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
+  { href: "#blogs", label: "Blog" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -22,46 +23,43 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "glass-nav border-b border-white/10"
-          : "bg-transparent"
-      }`}
-    >
-      <nav className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="#home" className="font-extrabold tracking-tight text-white text-lg">
-          Daniel Ding<span style={{ color: ACCENT }}>•</span>
-        </a>
-
-        <div className="hidden md:flex items-center gap-6">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-sm text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/30 rounded px-1"
-            >
-              {l.label}
-            </a>
-          ))}
-          <a href="#projects">
-            <Button
-              className="text-black"
-              style={{ backgroundColor: ACCENT }}
-            >
-              Explore
-            </Button>
-          </a>
-        </div>
-
-        <button
-          className="md:hidden inline-flex items-center justify-center p-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-          aria-label="Toggle menu"
-          onClick={() => setOpen((v) => !v)}
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-3">
+        <nav
+          className={`h-14 flex items-center justify-between px-4 border ${
+            scrolled ? "glass-nav border-white/10" : "bg-transparent border-transparent"
+          } rounded-full`}
         >
-          {open ? <X className="text-white" /> : <Menu className="text-white" />}
-        </button>
-      </nav>
+          <a href="#home" className="font-extrabold tracking-tight text-white text-base">
+            Daniel Ding<span style={{ color: ACCENT }}>•</span>
+          </a>
+
+          <div className="hidden md:flex items-center gap-6">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="text-sm text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/30 rounded px-1"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a href="#projects">
+              <Button className="text-black" style={{ backgroundColor: ACCENT }}>
+                Explore
+              </Button>
+            </a>
+          </div>
+
+          <button
+            className="md:hidden inline-flex items-center justify-center p-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            aria-label="Toggle menu"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X className="text-white" /> : <Menu className="text-white" />}
+          </button>
+        </nav>
+      </div>
 
       {open && (
         <div className="md:hidden border-t border-white/10 px-4 pb-4">

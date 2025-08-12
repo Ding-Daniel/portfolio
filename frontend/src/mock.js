@@ -63,6 +63,39 @@ export const projects = [
   },
 ];
 
+export const blogs = [
+  {
+    id: "b1",
+    title: "Choreographing Scroll: From Physics to Feeling",
+    excerpt:
+      "A deep dive into making scroll feel intentional using virtual scroll and velocity-based easing.",
+    date: "2025-07-10",
+    tags: ["Lenis", "UX", "Motion"],
+    image: "https://images.unsplash.com/photo-1652120268427-9ba66e870467",
+    link: "#",
+  },
+  {
+    id: "b2",
+    title: "Contrast, Clarity, Character",
+    excerpt:
+      "Why high-contrast dark UIs can be both accessible and dramatic when done right.",
+    date: "2025-06-20",
+    tags: ["Design", "Accessibility"],
+    image: "https://images.unsplash.com/photo-1714899984906-a3e8f43025a0",
+    link: "#",
+  },
+  {
+    id: "b3",
+    title: "GPU-accelerated Ribbons in the Browser",
+    excerpt:
+      "Exploring shader-based curves and how to keep them smooth at 60fps.",
+    date: "2025-05-12",
+    tags: ["WebGL", "Performance"],
+    image: "https://images.unsplash.com/photo-1651467987631-1bcd570b9f7f",
+    link: "#",
+  },
+];
+
 export const skills = [
   {
     group: "Frontend",

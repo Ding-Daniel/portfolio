@@ -7,8 +7,9 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { Github, Linkedin, Mail, ArrowUpRight, ExternalLink } from "lucide-react";
-import { hero, projects, skills, socials, ACCENT } from "../mock";
+import { hero, projects, skills, socials, ACCENT, blogs } from "../mock";
 import { useToast } from "../hooks/use-toast";
+import Typewriter from "./Typewriter";
 
 function useReveal() {
   useEffect(() => {
@@ -35,7 +36,7 @@ function useTilt() {
       const rect = el.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width - 0.5;
       const py = (e.clientY - rect.top) / rect.height - 0.5;
-      el.style.transform = `rotateY(${px * 6}deg) rotateX(${py * -6}deg)`;
+      el.style.transform = `rotateY(${px * 10}deg) rotateX(${py * -10}deg)`;
     };
     const reset = () => {
       el.style.transform = "rotateY(0deg) rotateX(0deg)";
@@ -50,6 +51,23 @@ function useTilt() {
   return ref;
 }
 
+function useParallax(speed = 0.15) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf;
+    const loop = () => {
+      const y = window.scrollY || window.pageYOffset;
+      el.style.transform = `translate3d(0, ${y * speed}px, 0)`;
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [speed]);
+  return ref;
+}
+
 export default function Sections() {
   useReveal();
   return (
@@ -58,6 +76,7 @@ export default function Sections() {
       <About />
       <Projects />
       <Skills />
+      <Blogs />
       <Contact />
       <Footer />
     </main>
@@ -65,27 +84,39 @@ export default function Sections() {
 }
 
 function Hero() {
+  const glow1 = useParallax(0.06);
+  const glow2 = useParallax(0.1);
   return (
-    <section id="home" className="relative min-h-[88vh] flex items-center bg-black text-white overflow-hidden">
+    <section id="home" className="relative min-h-[88vh] flex items-center bg-black text-white overflow-hidden" data-bob>
       <div className="absolute inset-0 pointer-events-none">
-        <div
+        <div ref={glow1}
           className="hero-glow"
           style={{
             background:
-              "radial-gradient(1200px 600px at 20% 20%, rgba(255,43,43,0.18), transparent 60%), radial-gradient(800px 400px at 80% 30%, rgba(255,43,43,0.12), transparent 60%)",
+              "radial-gradient(1200px 600px at 20% 20%, rgba(255,43,43,0.22), transparent 60%)",
+          }}
+        />
+        <div ref={glow2} className="hero-glow"
+          style={{
+            background:
+              "radial-gradient(900px 400px at 80% 30%, rgba(255,43,43,0.16), transparent 60%)",
           }}
         />
         <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(transparent 60%, rgba(255,255,255,0.04))" }} />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-28">
-        <div data-reveal className="reveal-up max-w-2xl">
-          <p className="text-sm font-medium tracking-widest uppercase text-white/70">Portfolio</p>
-          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold leading-[1.05]">
-            {hero.name}
-          </h1>
-          <p className="mt-4 text-xl text-white/80">{hero.tagline}</p>
-          <p className="mt-2 text-white/60 max-w-xl">{hero.subtext}</p>
+        <div data-reveal className="reveal-up max-w-2xl" data-bob>
+          <p className="text-sm font-medium tracking-widest uppercase text-white/70">
+            <Typewriter text="Portfolio" duration={900} />
+          </p>
+          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold leading-[1.05]">{hero.name}</h1>
+          <p className="mt-4 text-xl text-white/80">
+            <Typewriter text={hero.tagline} />
+          </p>
+          <p className="mt-2 text-white/60 max-w-xl">
+            <Typewriter text={hero.subtext} />
+          </p>
           <div className="mt-8 flex gap-3">
             {hero.ctas.map((c) => (
               <a key={c.label} href={c.href}>
@@ -113,16 +144,13 @@ function Hero() {
 
 function About() {
   return (
-    <section id="about" className="bg-black text-white">
+    <section id="about" className="bg-black text-white" data-bob>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid md:grid-cols-3 gap-10 items-start">
-          <div data-reveal className="reveal-up md:col-span-2">
+          <div data-reveal className="reveal-up md:col-span-2" data-bob>
             <h2 className="text-3xl font-bold">About</h2>
             <p className="mt-4 text-white/80 leading-relaxed">
-              I’m Daniel, a high school student fascinated by interactive design and
-              motion. I enjoy building sites with strong personalities: bold type,
-              dramatic reveals, and glassy layers—while keeping performance and
-              accessibility in check.
+              <Typewriter text="I’m Daniel, a high school student fascinated by interactive design and motion. I enjoy building sites with strong personalities: bold type, dramatic reveals, and glassy layers—while keeping performance and accessibility in check." />
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               {[
@@ -139,7 +167,7 @@ function About() {
           </div>
 
           <div data-reveal className="reveal-up md:col-span-1">
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white/5 border-white/10 card-accent" data-bob>
               <CardHeader>
                 <CardTitle>At a glance</CardTitle>
               </CardHeader>
@@ -169,7 +197,7 @@ function Stat({ label, value, detail, custom }) {
 
 function Projects() {
   return (
-    <section id="projects" className="bg-black text-white">
+    <section id="projects" className="bg-black text-white" data-bob>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
         <div className="flex items-end justify-between gap-6">
           <h2 className="text-3xl font-bold">Projects</h2>
@@ -189,10 +217,10 @@ function Projects() {
 function ProjectCard({ project, index }) {
   const tiltRef = useTilt();
   return (
-    <div data-reveal className="reveal-up">
+    <div data-reveal className="reveal-up" data-bob>
       <Card
         ref={tiltRef}
-        className="bg-white/5 border-white/10 group will-change-transform transition-transform duration-300"
+        className="bg-white/5 border-white/10 group will-change-transform transition-transform duration-300 card-accent"
         style={{ transformStyle: "preserve-3d" }}
       >
         <div className="relative overflow-hidden rounded-t-md">
@@ -228,7 +256,9 @@ function ProjectCard({ project, index }) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-white/70 text-sm leading-relaxed">{project.description}</p>
+          <p className="text-white/70 text-sm leading-relaxed">
+            <Typewriter text={project.description} duration={900} />
+          </p>
         </CardContent>
       </Card>
     </div>
@@ -237,12 +267,12 @@ function ProjectCard({ project, index }) {
 
 function Skills() {
   return (
-    <section id="skills" className="bg-black text-white">
+    <section id="skills" className="bg-black text-white" data-bob>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
         <h2 className="text-3xl font-bold" data-reveal>Skills</h2>
         <div className="mt-10 grid md:grid-cols-3 gap-7">
           {skills.map((bucket) => (
-            <Card key={bucket.group} className="bg-white/5 border-white/10 reveal-up" data-reveal>
+            <Card key={bucket.group} className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal data-bob>
               <CardHeader>
                 <CardTitle>{bucket.group}</CardTitle>
               </CardHeader>
@@ -256,6 +286,42 @@ function Skills() {
                     <Progress value={s.level} className="h-2 bg-white/10" />
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Blogs() {
+  return (
+    <section id="blogs" className="bg-black text-white" data-bob>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
+        <div className="flex items-end justify-between gap-6">
+          <h2 className="text-3xl font-bold">Blog &amp; Research</h2>
+          <a href="#" className="text-sm text-white/70 hover:text-white">All posts</a>
+        </div>
+        <div className="mt-10 grid md:grid-cols-3 gap-7">
+          {blogs.map((b) => (
+            <Card key={b.id} className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal data-bob>
+              <div className="relative overflow-hidden rounded-t-md">
+                <img src={b.image} alt={b.title} className="h-40 w-full object-cover opacity-90" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              </div>
+              <CardHeader>
+                <CardTitle>{b.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-white/70 text-sm leading-relaxed">
+                  <Typewriter text={b.excerpt} duration={900} />
+                </p>
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
+                  {b.tags.map((t) => (
+                    <Badge key={t} className="bg-black/70 text-white border border-white/10">{t}</Badge>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -283,11 +349,11 @@ function Contact() {
   };
 
   return (
-    <section id="contact" className="bg-black text-white">
+    <section id="contact" className="bg-black text-white" data-bob>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-24">
         <h2 className="text-3xl font-bold" data-reveal>Contact</h2>
         <div className="mt-8 grid md:grid-cols-2 gap-10">
-          <Card className="bg-white/5 border-white/10 reveal-up" data-reveal>
+          <Card className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal data-bob>
             <CardHeader>
               <CardTitle>Let’s build something bold</CardTitle>
             </CardHeader>
@@ -325,7 +391,7 @@ function Contact() {
             </CardContent>
           </Card>
 
-          <div className="reveal-up" data-reveal>
+          <div className="reveal-up" data-reveal data-bob>
             <div className="grid gap-4">
               <a href="#" className="inline-flex items-center gap-2 text-white/80 hover:text-white">
                 <Github className="h-5 w-5" /> GitHub
@@ -347,7 +413,7 @@ function Contact() {
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-black text-white border-t border-white/10">
+    <footer className="bg-black text-white border-top border-white/10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="text-white/60 text-sm">© {year} Daniel Ding</div>
         <div className="flex items-center gap-4">
