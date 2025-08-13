@@ -1,33 +1,29 @@
 /* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
 
-/* Optional: add Ciguatera when you place the licensed files in /public/fonts */
-/*
 @font-face {
   font-family: 'Ciguatera';
-  src: url('/fonts/Ciguatera.woff2') format('woff2');
+  src: url('/fonts/Ciguatera.ttf') format('truetype');
   font-weight: 400 800;
   font-style: normal;
   font-display: swap;
 }
-*/
 
 :root { --brand: #ff2b2b; }
 
 html { scroll-behavior: smooth; }
 
-/* Questrial as default body font, Space Grotesk fallback; headings can use .heading-font */
+/* Questrial as default body font */
 body { font-family: Questrial, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
-.heading-font { font-family: 'Ciguatera', 'Space Grotesk', Questrial, sans-serif; letter-spacing: 0.2px; }
+.heading-font { font-family: 'Ciguatera', Questrial, sans-serif; letter-spacing: 0.2px; }
 
 .App { min-height: 100vh; background: #000; color: #fff; }
 
 /* Glass nav utility - softer, matte look */
 .glass-nav { background: rgba(18, 18, 19, 0.22); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.06); }
 
-/* Hero glow - refined subtle blend */
-.hero-glow { position: absolute; inset: 0; filter: blur(80px); opacity: 0.9; will-change: transform; }
+/* Hero glow - refined brighter blend with subtle multitone accents within allowed gradient discipline */
+.hero-glow { position: absolute; inset: 0; filter: blur(80px); opacity: 0.95; will-change: transform; }
 
 .reveal-up { opacity: 0; transform: translateY(40px) scale(0.96); transition: opacity 900ms ease, transform 1100ms cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
 .reveal-up.in-view { opacity: 1; transform: translateY(0) scale(1); }
@@ -37,11 +33,11 @@ button:hover, .btn:hover { transform: translateY(-1px); }
 button:active, .btn:active { transform: translateY(0px); }
 
 .card-accent { transition: box-shadow 200ms ease, border-color 200ms ease, transform 200ms ease; }
-.card-accent:hover { border-color: rgba(255,43,43,0.6); box-shadow: 0 10px 30px rgba(255,43,43,0.12), 0 2px 10px rgba(0,0,0,0.5); transform: translateY(-2px); }
+.card-accent:hover { border-color: rgba(255,43,43,0.6); box-shadow: 0 10px 30px rgba(255,43,43,0.18), 0 2px 10px rgba(0,0,0,0.5); transform: translateY(-2px); }
 
 :focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(255,255,255,0.18); border-radius: 6px; }
 
-.section-line { height: 1px; width: 0%; background: linear-gradient(90deg, rgba(255,43,43,0.9), rgba(255,43,43,0.35), transparent 80%); transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1); }
+.section-line { height: 1px; width: 0%; background: linear-gradient(90deg, rgba(255,43,43,0.9), rgba(255,196,196,0.5), transparent 80%); transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1); }
 .section-line.in-view { width: 100%; }
 
 /* Mobile menu animation */

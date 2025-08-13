@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Menu, X } from "lucide-react";
 import { ACCENT } from "../mock";
+import gsap from "gsap";
 
 const links = [
   { href: "#about", label: "About" },
@@ -26,8 +27,11 @@ export default function Navbar() {
   useEffect(() => {
     const el = panelRef.current;
     if (!el) return;
-    if (open) el.classList.add("open");
-    else el.classList.remove("open");
+    if (open) {
+      gsap.fromTo(el, { y: -16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.32, ease: "power3.out" });
+    } else {
+      gsap.to(el, { y: -16, opacity: 0, duration: 0.26, ease: "power2.in" });
+    }
   }, [open]);
 
   return (
@@ -58,7 +62,7 @@ export default function Navbar() {
       {open && (
         <div className="fixed inset-0 z-40 menu-overlay" onClick={() => setOpen(false)}>
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-3" onClick={(e) => e.stopPropagation()}>
-            <div ref={panelRef} className="menu-panel glass-nav rounded-2xl border border-white/10 p-4">
+            <div ref={panelRef} className="glass-nav rounded-2xl border border-white/10 p-4">
               <div className="flex items-center justify-between">
                 <span className="text-white heading-font">Menu</span>
                 <button className="p-2" aria-label="Close menu" onClick={() => setOpen(false)}>
