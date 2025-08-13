@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { Github, Linkedin, Mail, ArrowUpRight, ExternalLink } from "lucide-react";
-import { hero, projects, skills, socials, ACCENT, blogs } from "../mock";
+import { hero, projects, skills, ACCENT, blogs } from "../mock";
 import { useToast } from "../hooks/use-toast";
 import Typewriter from "./Typewriter";
 import axios from "axios";
@@ -40,15 +40,10 @@ function useTilt() {
       const py = (e.clientY - rect.top) / rect.height - 0.5;
       el.style.transform = `rotateY(${px * 10}deg) rotateX(${py * -10}deg)`;
     };
-    const reset = () => {
-      el.style.transform = "rotateY(0deg) rotateX(0deg)";
-    };
+    const reset = () => { el.style.transform = "rotateY(0deg) rotateX(0deg)"; };
     el.addEventListener("mousemove", handle);
     el.addEventListener("mouseleave", reset);
-    return () => {
-      el.removeEventListener("mousemove", handle);
-      el.removeEventListener("mouseleave", reset);
-    };
+    return () => { el.removeEventListener("mousemove", handle); el.removeEventListener("mouseleave", reset); };
   }, []);
   return ref;
 }
@@ -57,9 +52,7 @@ function SectionLine() {
   const ref = useRef(null);
   useEffect(() => {
     const el = ref.current; if (!el) return;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) el.classList.add("in-view"); });
-    }, { threshold: 0.2 });
+    const io = new IntersectionObserver((entries) => { entries.forEach((e) => { if (e.isIntersecting) el.classList.add("in-view"); }); }, { threshold: 0.2 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -89,42 +82,28 @@ function Hero() {
   return (
     <section id="home" className="relative min-h-[88vh] flex items-center bg-black text-white overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="hero-glow"
-          style={{
-            background:
-              "radial-gradient(1200px 600px at 20% 20%, rgba(255,43,43,0.22), transparent 60%)",
-          }}
-        />
-        <div className="hero-glow"
-          style={{
-            background:
-              "radial-gradient(900px 400px at 80% 30%, rgba(255,43,43,0.16), transparent 60%)",
-          }}
-        />
-        <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(transparent 60%, rgba(255,255,255,0.04))" }} />
-        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
+        <div className="hero-glow" style={{ background: "radial-gradient(1200px 600px at 20% 20%, rgba(255,43,43,0.14), transparent 60%)" }} />
+        <div className="hero-glow" style={{ background: "radial-gradient(900px 400px at 78% 30%, rgba(255,43,43,0.09), transparent 60%)" }} />
+        <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.02), transparent 40%)" }} />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-32">
         <div data-reveal className="reveal-up max-w-2xl">
-          <p className="text-sm font-medium tracking-widest uppercase text-white/70">Portfolio</p>
-          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold leading-[1.05]">Daniel Ding</h1>
-          <p className="mt-4 text-xl text-white/80">High school student crafting bold, interactive web experiences.</p>
-          <p className="mt-2 text-white/60 max-w-xl">I love turning ideas into dramatic, high-performance interfaces with delightful motion.</p>
+          <p className="text-sm font-medium tracking-widest uppercase text-white/70">
+            <Typewriter triggerOnView text="Portfolio" duration={800} />
+          </p>
+          <h1 className="mt-4 text-5xl sm:text-6xl font-extrabold leading-[1.05] heading-font">{hero.name}</h1>
+          <p className="mt-4 text-xl text-white/80"><Typewriter triggerOnView text={hero.tagline} /></p>
+          <p className="mt-2 text-white/60 max-w-xl"><Typewriter triggerOnView text={hero.subtext} /></p>
           <div className="mt-8 flex gap-3">
-            <a href="#projects">
-              <Button className="h-11 px-6 text-black" style={{ backgroundColor: ACCENT }}>
-                View Projects
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
-            <a href="#contact">
-              <Button className="h-11 px-6 bg-transparent border border-white/20 text-white">
-                Contact Me
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
+            {hero.ctas.map((c) => (
+              <a key={c.label} href={c.href}>
+                <Button className={`h-11 px-6 ${c.type === "ghost" ? "bg-transparent border border-white/20 text-white" : "text-black"}`} style={c.type === "ghost" ? {} : { backgroundColor: ACCENT }}>
+                  {c.label}
+                  <ArrowUpRight className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -140,10 +119,10 @@ function Hero() {
 
 function About() {
   return (
-    <section id="about" className="bg-[#0a0a0a] text-white">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
+    <section id="about" className="bg-black text-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-40">
         <div className="flex items-end justify-between gap-6" data-reveal>
-          <h2 className="text-3xl font-bold">About</h2>
+          <h2 className="text-3xl font-bold heading-font">About</h2>
         </div>
         <SectionLine />
         <div className="mt-12 grid md:grid-cols-3 gap-12 items-start">
@@ -151,17 +130,12 @@ function About() {
             <p className="text-white/80 leading-relaxed">
               <Typewriter triggerOnView text="I’m Daniel, a high school student fascinated by interactive design and motion. I enjoy building sites with strong personalities: bold type, dramatic reveals, and glassy layers—while keeping performance and accessibility in check." />
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {["Motion-first mindset", "Clean, readable code", "Accessibility-aware", "High performance"].map((chip) => (
-                <Badge key={chip} className="bg-white/10 text-white border border-white/10">{chip}</Badge>
-              ))}
-            </div>
           </div>
 
           <div data-reveal className="reveal-up md:col-span-1">
             <Card className="bg-white/5 border-white/10 card-accent">
               <CardHeader>
-                <CardTitle style={{ color: ACCENT }}>At a glance</CardTitle>
+                <CardTitle style={{ color: ACCENT }} className="heading-font">At a glance</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Stat label="Based in" value="" detail="" custom="Earth" />
@@ -188,14 +162,14 @@ function Stat({ label, value, detail, custom }) {
 function Projects() {
   return (
     <section id="projects" className="bg-black text-white">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-40">
         <div className="flex items-end justify-between gap-6">
-          <h2 className="text-3xl font-bold">Projects</h2>
+          <h2 className="text-3xl font-bold heading-font">Projects</h2>
           <a href="#contact" className="text-sm text-white/70 hover:text-white">Let’s collaborate</a>
         </div>
         <SectionLine />
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((p, i) => (<ProjectCard key={p.id} project={p} index={i} />))}
+          {projects.map((p) => (<ProjectCard key={p.id} project={p} />))}
         </div>
       </div>
     </section>
@@ -240,14 +214,14 @@ function ProjectCard({ project }) {
 function Skills() {
   return (
     <section id="skills" className="bg-black text-white">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
-        <h2 className="text-3xl font-bold" data-reveal>Skills</h2>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-40">
+        <h2 className="text-3xl font-bold heading-font" data-reveal>Skills</h2>
         <SectionLine />
         <div className="mt-12 grid md:grid-cols-3 gap-8">
           {skills.map((bucket) => (
             <Card key={bucket.group} className="bg-white/5 border-white/10 reveal-up card-accent" data-reveal>
               <CardHeader>
-                <CardTitle style={{ color: ACCENT }}>{bucket.group}</CardTitle>
+                <CardTitle style={{ color: ACCENT }} className="heading-font">{bucket.group}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-5">
                 {bucket.items.map((s) => (
@@ -271,9 +245,9 @@ function Skills() {
 function Blogs() {
   return (
     <section id="blogs" className="bg-black text-white">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-40">
         <div className="flex items-end justify-between gap-6">
-          <h2 className="text-3xl font-bold">Blog &amp; Research</h2>
+          <h2 className="text-3xl font-bold heading-font">Blog &amp; Research</h2>
           <a href="#" className="text-sm text-white/70 hover:text-white">All posts</a>
         </div>
         <SectionLine />
@@ -319,13 +293,13 @@ function Contact() {
 
   return (
     <section id="contact" className="bg-black text-white">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-36">
-        <h2 className="text-3xl font-bold" data-reveal>Contact</h2>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-40">
+        <h2 className="text-3xl font-bold heading-font" data-reveal>Contact</h2>
         <SectionLine />
         <div className="mt-12">
           <Card className="bg-white/5 border-white/10 reveal-up card-accent max-w-4xl mx-auto" data-reveal>
             <CardHeader>
-              <CardTitle style={{ color: ACCENT }}>Let’s build something bold</CardTitle>
+              <CardTitle style={{ color: ACCENT }} className="heading-font">Let’s build something bold</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={onSubmit} className="space-y-4">
